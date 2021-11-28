@@ -1,0 +1,32 @@
+.nav {
+  background-color: #e02626;
+  color: white;
+}
+
+.nav__content {
+  width: 90%;
+  min-width: 300px;
+  margin: auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.nav__title {
+  margin: 0;
+  font-size: clamp(1rem, 6vw, 2.5rem);
+}
+.nav__links {
+  display: flex;
+}
+.nav__link {
+  font-size: clamp(1rem, 3vw, 1.5rem);
+  margin-left: 2rem;
+}
+
+.nav__clicked,
+.nav__link:hover {
+  color: #333333;
+}

@@ -1,0 +1,13 @@
+.map__title {
+  text-align: center;
+}
+
+.ChoroplethMap__container {
+  display: flex;
+  justify-content: center;
+  background-color: #333333;
+  margin: 1rem auto;
+  width: 80%;
+  flex-direction: column;
+  align-items: center;
+}
