@@ -5,11 +5,13 @@ const apiWorldStats =
   "https://covid.ourworldindata.org/data/owid-covid-data.json";
 
 export async function getStaticProps() {
-  const res = await fetch(`${apiWorldStats}`);
-  const data = await res.json();
+  //fetch backend
+
+  const res = await fetch("http://localhost:3000/api/info");
+  const covid = await res.json();
   return {
     props: {
-      data,
+      covid,
     },
     revalidate: 43200,
   };
@@ -17,7 +19,6 @@ export async function getStaticProps() {
 
 //add commas to an number
 function numberWithCommas(x) {
-  console.log(x);
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
@@ -31,21 +32,22 @@ const checkLastVaccineData = (data) => {
   }
 };
 
-const Statistics = ({ data }) => {
-  // console.log(data);
+const Statistics = ({ covid }) => {
+  const data = covid.data[0];
 
-  const world = data.OWID_WRL;
-  const summary = world.data[world.data.length - 1];
+  const world = data.summary;
+  const summary = world[world.length - 1];
+
   console.log(summary);
   console.log(world);
 
-  const years = world.data.map((i) => new Date(i.date));
+  const years = world.map((i) => new Date(i.date));
   //total cases graph
-  const totalCases = world.data.map((i) => i.total_cases);
+  const totalCases = world.map((i) => i.total_cases);
   //new cases
-  const newCases = world.data.map((i) => i.new_cases);
+  const newCases = world.map((i) => i.new_cases);
   //new cases smoothed
-  const newCasesSmoothed = world.data.map((i) => {
+  const newCasesSmoothed = world.map((i) => {
     if (i.new_cases_smoothed === undefined) {
       return i.new_cases;
     }
@@ -53,9 +55,9 @@ const Statistics = ({ data }) => {
   });
 
   //new deaths
-  const newDeaths = world.data.map((i) => i.new_deaths);
+  const newDeaths = world.map((i) => i.new_deaths);
   //new deaths smoothed
-  const newDeathsSmoothed = world.data.map((i) => {
+  const newDeathsSmoothed = world.map((i) => {
     if (i.new_deaths_smoothed === undefined) {
       return i.new_deaths;
     }
@@ -63,16 +65,16 @@ const Statistics = ({ data }) => {
   });
 
   //total deaths
-  const totalDeaths = world.data.map((i) => i.total_deaths);
+  const totalDeaths = world.map((i) => i.total_deaths);
 
   //vaccineYears
-  const vaccineYears = world.data
+  const vaccineYears = world
     .filter((i) => i.total_vaccinations)
     .map((i) => new Date(i.date));
   //new vaccines
-  const newVaccines = world.data.map((i) => i.new_vaccinations);
+  const newVaccines = world.map((i) => i.new_vaccinations);
   //new vaccinations smoothed
-  const newVaccinesSmoothed = world.data
+  const newVaccinesSmoothed = world
     .filter((i) => i.total_vaccinations)
     .map((i) => {
       if (i.new_vaccinations === undefined) {
@@ -86,9 +88,9 @@ const Statistics = ({ data }) => {
   console.log(vaccineYears.length);
   console.log(newVaccinesSmoothed);
   //total vaccines
-  const totalVaccines = world.data.map((i) => i.total_vaccinations);
+  const totalVaccines = world.map((i) => i.total_vaccinations);
 
-  const vaccine = checkLastVaccineData(world.data);
+  const vaccine = checkLastVaccineData(world);
   return (
     <div>
       <h1 className="title">Statistics</h1>
@@ -161,5 +163,4 @@ const Statistics = ({ data }) => {
     </div>
   );
 };
-
 export default Statistics;

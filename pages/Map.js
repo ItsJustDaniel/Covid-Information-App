@@ -41,11 +41,6 @@ export const getStaticProps = async () => {
 };
 
 const Map = ({ data, locations, dataCovid, errors }) => {
-  console.log(data);
-  console.log(locations);
-  console.log(dataCovid);
-  console.log(errors);
-
   return (
     <div>
       <h1 className={styles.map__title}>Map</h1>

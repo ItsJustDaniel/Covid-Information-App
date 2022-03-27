@@ -12,7 +12,6 @@ const BarChart = ({
   Value_Category,
   smoothed,
 }) => {
-  console.log(data);
   const barChart = useRef();
   useEffect(() => {
     const w = 900;
@@ -94,7 +93,7 @@ const BarChart = ({
     //create bars
     const bars = svg
       .selectAll("rect")
-      .data(data.data)
+      .data(data)
       .enter()
       .append("rect")
       .attr("x", (d) => xScale(new Date(d.date)))
@@ -114,7 +113,7 @@ const BarChart = ({
     if (smoothed) {
       const line = svg
         .append("path")
-        .datum(data.data)
+        .datum(data)
         .attr("fill", "none")
         .attr("stroke", "#e02626")
         .attr("stroke-width", 4)
