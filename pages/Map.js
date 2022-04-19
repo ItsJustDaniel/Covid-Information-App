@@ -29,6 +29,7 @@ export const getStaticProps = async () => {
       notFound: true,
     };
   }
+
   return {
     props: {
       data,
@@ -40,7 +41,7 @@ export const getStaticProps = async () => {
   };
 };
 
-const Map = ({ data, locations, dataCovid, errors }) => {
+const Map = ({ data, locations, dataCovid, errors, Api }) => {
   return (
     <div>
       <h1 className={styles.map__title}>Map</h1>

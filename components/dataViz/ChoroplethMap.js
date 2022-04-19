@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
 import styles from "../../styles/map.module.css";
-import numberWithCommas from "../numberWithCommas";
 import * as d3 from "d3";
 
 function getBaseLog(x, y) {

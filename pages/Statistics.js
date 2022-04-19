@@ -1,21 +1,27 @@
 import styles from "../styles/statistics.module.css";
 import BarChart from "../components/dataViz/BarChart";
+import { useState } from "react";
 
-const apiWorldStats =
-  "https://covid.ourworldindata.org/data/owid-covid-data.json";
-
-export async function getStaticProps() {
+export const getStaticProps = async () => {
   //fetch backend
-
+  const baseUrl =
+    process.env.NODE_ENV === "production"
+      ? "https://covid-information-app.vercel.app/api/info"
+      : "http://localhost:3000/api/info";
   const res = await fetch("http://localhost:3000/api/info");
   const covid = await res.json();
+  if (!covid) {
+    return {
+      notFound: true,
+    };
+  }
   return {
     props: {
       covid,
     },
     revalidate: 43200,
   };
-}
+};
 
 //add commas to an number
 function numberWithCommas(x) {
@@ -24,7 +30,6 @@ function numberWithCommas(x) {
 
 //get most updated vaccine data
 const checkLastVaccineData = (data) => {
-  console.log(data);
   for (let i = data.length - 1; i > 0; i--) {
     if (data[i].total_vaccinations) {
       return data[i].total_vaccinations;
@@ -38,8 +43,7 @@ const Statistics = ({ covid }) => {
   const world = data.summary;
   const summary = world[world.length - 1];
 
-  console.log(summary);
-  console.log(world);
+  const vaccineData = world.filter((i) => i.new_vaccinations);
 
   const years = world.map((i) => new Date(i.date));
   //total cases graph
@@ -71,8 +75,15 @@ const Statistics = ({ covid }) => {
   const vaccineYears = world
     .filter((i) => i.total_vaccinations)
     .map((i) => new Date(i.date));
-  //new vaccines
-  const newVaccines = world.map((i) => i.new_vaccinations);
+
+  //newVaccineYears
+  const newVaccineYears = world
+    .filter((i) => i.new_vaccinations)
+    .map((i) => new Date(i.date)); //new vaccines
+  const newVaccines = world
+    .filter((i) => i.new_vaccinations)
+    .map((i) => i.new_vaccinations);
+
   //new vaccinations smoothed
   const newVaccinesSmoothed = world
     .filter((i) => i.total_vaccinations)
@@ -85,11 +96,10 @@ const Statistics = ({ covid }) => {
       }
       return i.new_vaccinations_smoothed;
     });
-  console.log(vaccineYears.length);
-  console.log(newVaccinesSmoothed);
   //total vaccines
-  const totalVaccines = world.map((i) => i.total_vaccinations);
-
+  const totalVaccines = world
+    .filter((i) => i.total_vaccinations)
+    .map((i) => i.total_vaccinations);
   const vaccine = checkLastVaccineData(world);
   return (
     <div>
@@ -124,6 +134,7 @@ const Statistics = ({ covid }) => {
         Name="Total Cases"
         Value_Type="total_cases"
         Value_Category="Cases"
+        smoothed={null}
       />
       <BarChart
         data={world}
@@ -141,11 +152,11 @@ const Statistics = ({ covid }) => {
         Name="Total Deaths"
         Value_Type="total_deaths"
         Value_Category="Deaths"
+        smoothed={null}
       />
-
       <BarChart
-        data={world}
-        X={vaccineYears}
+        data={vaccineData}
+        X={newVaccineYears}
         Y={newVaccines}
         Name="New Vaccinations"
         Value_Type="new_vaccinations"
@@ -153,12 +164,13 @@ const Statistics = ({ covid }) => {
         smoothed={newVaccinesSmoothed}
       />
       <BarChart
-        data={world}
+        data={vaccineData}
         X={vaccineYears}
         Y={totalVaccines}
         Name="Total Vaccinations"
         Value_Type="total_vaccinations"
         Value_Category="Vacines"
+        smoothed={null}
       />
     </div>
   );

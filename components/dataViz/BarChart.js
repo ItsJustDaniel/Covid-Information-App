@@ -65,13 +65,22 @@ const BarChart = ({
     };
 
     const mousemove = (i, d, e) => {
-      circle
-        .attr("cx", xScale(new Date(d.date)))
-        .attr("cy", h - yScale(d[`${Value_Type}_smoothed`]));
+      let index;
+      for (let i = 0; i <= data.length; i++) {
+        if (data[i] === d) {
+          index = i;
+          break;
+        }
+      }
+      if (smoothed !== null) {
+        circle
+          .attr("cx", xScale(X[index]))
+          .attr("cy", h - yScale(smoothed[index]));
+      }
       tooltip
         .html(
           `Date: ${d.date} <br> ${Value_Category}: ${numberWithCommas(
-            d[Value_Type]
+            data[index][Value_Type]
           )} <br>
           ${
             smoothed
@@ -96,7 +105,9 @@ const BarChart = ({
       .data(data)
       .enter()
       .append("rect")
-      .attr("x", (d) => xScale(new Date(d.date)))
+      .attr("x", (d, i) => {
+        return xScale(X[i]);
+      })
       .attr("y", (d, i) => h - yScale(Y[i]))
       .attr("width", barWidth)
       .attr("height", (d, i) => yScale(Y[i]))
@@ -105,7 +116,7 @@ const BarChart = ({
       .style("position", "relative")
       .style("z-index", "-1")
       .attr("data-case", (d, i) => Y[i])
-      .attr("data-date", (d) => d.date)
+      .attr("data-date", (d, i) => X[i])
       .on("mouseover", mouseover)
       .on("mousemove", mousemove)
       .on("mouseleave", mouseleave);
@@ -175,6 +186,16 @@ const BarChart = ({
       </h6>
     </div>
   );
+};
+
+BarChart.defaultProps = {
+  data: {},
+  X: 0,
+  Y: 0,
+  Name: "default",
+  Value_Type: "default",
+  Value_Category: "default",
+  smoothed: false,
 };
 
 export default BarChart;
