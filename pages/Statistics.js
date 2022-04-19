@@ -8,7 +8,7 @@ export const getStaticProps = async () => {
     process.env.NODE_ENV === "production"
       ? "https://covid-information-app.vercel.app/api/info"
       : "http://localhost:3000/api/info";
-  const res = await fetch("http://localhost:3000/api/info");
+  const res = await fetch(baseUrl);
   const covid = await res.json();
   if (!covid) {
     return {
