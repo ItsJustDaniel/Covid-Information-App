@@ -1,16 +1,22 @@
 import styles from "../styles/statistics.module.css";
 import BarChart from "../components/dataViz/BarChart";
 import { useState } from "react";
+import dbConnect from "../lib/connection";
+import CovidData from "../models/Covid";
 
 export const getStaticProps = async () => {
+  await dbConnect();
+
+  const Doc = await CovidData.find();
+  const covid = JSON.parse(JSON.stringify(Doc));
   //fetch backend
-  const baseUrl =
-    process.env.NODE_ENV === "production"
-      ? "https://covid-information-app.vercel.app/api/info"
-      : "http://localhost:3000/api/info";
-  const res = await fetch(baseUrl);
-  const covid = await res.json();
-  if (!covid) {
+  // const baseUrl =
+  //   process.env.NODE_ENV === "production"
+  //     ? "https://covid-information-app.vercel.app/api/info"
+  //     : "http://localhost:3000/api/info";
+  // const res = await fetch(baseUrl);
+  // const covid = await res.json();
+  if (!Doc) {
     return {
       notFound: true,
     };
@@ -38,7 +44,8 @@ const checkLastVaccineData = (data) => {
 };
 
 const Statistics = ({ covid }) => {
-  const data = covid.data[0];
+  console.log(covid);
+  const data = covid[0];
 
   const world = data.summary;
   const summary = world[world.length - 1];
