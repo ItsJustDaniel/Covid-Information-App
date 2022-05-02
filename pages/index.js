@@ -21,7 +21,7 @@ export default function Home() {
         />
         <meta
           property="og:image"
-          content="https://github.com/ItsJustDaniel/personal-website-2/blob/main/public/images/projects/Covid%20Information.PNG"
+          content="https://raw.githubusercontent.com/ItsJustDaniel/personal-website-2/main/public/images/projects/Covid%20Information.PNG"
         />
       </Head>
       <div className={styles.hero__container}>
