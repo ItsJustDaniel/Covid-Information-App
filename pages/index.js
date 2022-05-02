@@ -5,6 +5,25 @@ import styles from "../styles/Home.module.css";
 export default function Home() {
   return (
     <div>
+      <Head>
+        <title>Covid Information || Home</title>
+
+        <meta
+          property="og:url"
+          content="https://covid-information-app.vercel.app/"
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Covid Information" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta
+          property="og:description"
+          content="Covid app that details information and statistics of covid-19"
+        />
+        <meta
+          property="og:image"
+          content="https://github.com/ItsJustDaniel/personal-website-2/blob/main/public/images/projects/Covid%20Information.PNG"
+        />
+      </Head>
       <div className={styles.hero__container}>
         <div className={styles.hero__desc}>
           <h1>Covid-19 Information Site</h1>
